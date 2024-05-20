@@ -1,7 +1,3 @@
-//
-// Created by lucien.mousin on 08/04/2024.
-//
-
 #include <random>
 #include <algorithm>
 #include <ctime>
@@ -20,7 +16,7 @@ std::vector<int> Solution::getSolution() const {
 
 int Solution::operator[](int i) const {
     if ( i < 0 )
-        return this->villes[this->villes.size() + i ];
+        return this->villes[this->villes.size() + i];
     return this->villes[i];
 }
 
@@ -37,6 +33,54 @@ void Solution::shuffle() {
 
 void Solution::swap(int i, int j) {
     std::swap(this->villes[i], this->villes[j]);
+}
+
+Solution Solution::echange_par_index(int index) {
+    Solution newSol(*this); // Create a copy of the current solution
+    int n = static_cast<int>((1 + sqrt(1 + 8 * index)) / 2);
+    int i = index - (n * (n - 1)) / 2;
+    int j = this->size() - n + i;
+    newSol.swap(i, j);
+    return newSol;
+}
+
+Solution Solution::reinsertion(int i, int j) {
+    Solution newSol(*this); // Create a copy of the current solution
+    int city = newSol.villes[i];
+    newSol.villes.erase(newSol.villes.begin() + i);
+    newSol.villes.insert(newSol.villes.begin() + j, city);
+    return newSol;
+}
+
+Solution Solution::reinsertion_par_index(int index) {
+    Solution newSol(*this); // Create a copy of the current solution
+    int n = this->size();
+    int i, j;
+    if (index <= n - 2) {
+        i = 0;
+        j = index + 1;
+    } else {
+        i = (index - 1) / (n - 2);
+        j = (index - 1) % (n - 2);
+        if (j >= i - 1) {
+            j += 2;
+        }
+    }
+    return newSol.reinsertion(i, j);
+}
+
+Solution Solution::two_opt(int i, int j) {
+    Solution newSol(*this); // Create a copy of the current solution
+    std::reverse(newSol.villes.begin() + i, newSol.villes.begin() + j + 1);
+    return newSol;
+}
+
+Solution Solution::two_opt_par_index(int index) {
+    Solution newSol(*this); // Create a copy of the current solution
+    int n = static_cast<int>((1 + sqrt(1 + 8 * index)) / 2);
+    int i = index - (n * (n - 1)) / 2;
+    int j = this->size() - n + i;
+    return newSol.two_opt(i, j);
 }
 
 std::ostream& operator<<(std::ostream &os, const Solution &sol) {

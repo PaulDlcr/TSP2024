@@ -16,4 +16,5 @@ add_executable(TSP2024 main.cpp
         src/Random.h
         src/Random.h
         src/Greedy.cpp
-        src/Greedy.h)
+        src/Greedy.h
+)
